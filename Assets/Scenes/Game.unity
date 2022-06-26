@@ -568,8 +568,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyPrefab: {fileID: 6011204737634989343, guid: 3f512655f9f85e04f9146e9182fb93a1, type: 3}
-  _powerupPrefab: {fileID: 2530880590487993644, guid: cda9e2c92b9abfa4daed1f1a8d95e64b, type: 3}
-  _enemy_Container: {fileID: 2530880590487993644, guid: f59cc38d5ffcf7340b838fb634c0a53d, type: 3}
+  _enemy_Container: {fileID: 657878010}
+  _powerups:
+  - {fileID: 2530880590487993644, guid: f59cc38d5ffcf7340b838fb634c0a53d, type: 3}
+  - {fileID: 2824324811393085484, guid: cf9e1c94c79f4504d8aa2ba8ba1fe909, type: 3}
+  - {fileID: 0}
 --- !u!4 &1168773252
 Transform:
   m_ObjectHideFlags: 0

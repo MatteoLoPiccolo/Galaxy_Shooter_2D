@@ -4,7 +4,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 5.5f;
+    private float _speed = 5.0f;
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private float _canFire = -1f;
     private bool _isTripleShotActive;
+    private float _speedMultiplier = 2.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -63,6 +64,12 @@ public class Player : MonoBehaviour
         StartCoroutine(TripleShotPowerDownRoutine());
     }
 
+    public void SpeedPowerupActive()
+    {
+        _speed *= _speedMultiplier;
+        StartCoroutine(SpeedPowerupDownRoutine());
+    }
+
     private void CalculateMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -99,5 +106,11 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _isTripleShotActive = false;
+    }
+
+    IEnumerator SpeedPowerupDownRoutine()
+    {
+        yield return new WaitForSeconds(3.0f);
+        _speed /= _speedMultiplier;
     }
 }
