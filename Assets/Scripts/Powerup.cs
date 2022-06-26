@@ -34,10 +34,10 @@ public class Powerup : MonoBehaviour
                         player.TripleShotActive();
                         break;
                     case 1:
-                        player.SpeedPowerupActive();
+                        player.SpeedActive();
                         break;
                     case 2:
-                        Debug.Log("Shield Powerup collected!");
+                        player.ShieldActive();
                         break;
                 }
             }

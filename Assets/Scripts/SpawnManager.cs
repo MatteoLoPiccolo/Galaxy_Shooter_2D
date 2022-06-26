@@ -33,14 +33,14 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerupRoutine()
     {
-        float _tripleShotSpawnTime = Random.Range(2.5f, 7.5f);
-        int randomPowerup = Random.Range(0, _powerups.Length);
+        float _randomSpawnTime = Random.Range(2.5f, 7.5f);
 
         while (_stopSpawning == false)
         {
+            int randomPowerup = Random.Range(0, _powerups.Length);
             var positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0);
             Instantiate(_powerups[randomPowerup], positionToSpawn, Quaternion.identity);
-            yield return new WaitForSeconds(_tripleShotSpawnTime);
+            yield return new WaitForSeconds(_randomSpawnTime);
         }
     }
 
