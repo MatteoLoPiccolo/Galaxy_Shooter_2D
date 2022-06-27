@@ -10,17 +10,19 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _tripleShotPrefab;
     [SerializeField]
-    private GameObject _shield;
+    private GameObject _shieldVisualizer;
     [SerializeField]
     private float _fireRate = 0.15f;
     [SerializeField]
     private int _lives = 3;
 
     private SpawnManager _spawnManager;
+    private UIManager _uiManager;
     private float _canFire = -1f;
     private bool _isTripleShotActive;
     private bool _isShieldActive;
     private float _speedMultiplier = 2.0f;
+    private int _score;
 
     // Start is called before the first frame update
     void Start()
@@ -28,10 +30,14 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_spawnManager == null)
             Debug.Log("SpawnManager is NULL!");
-        
+
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        if (_uiManager == null)
+            Debug.Log("UI_Manager is NULL!");
+
         transform.position = Vector3.zero;
 
-        _shield.SetActive(false);
+        _shieldVisualizer.SetActive(false);
     }
 
     // Update is called once per frame
@@ -78,7 +84,7 @@ public class Player : MonoBehaviour
     public void ShieldActive()
     {
         _isShieldActive = true;
-        _shield.SetActive(true);
+        _shieldVisualizer.SetActive(true);
     }
 
     private void CalculateMovement()
@@ -102,16 +108,24 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void AddScore(int points)
+    {
+        _score += points;
+        _uiManager.UpdateScore(_score);
+    }
+
     public void Damage()
     {
         if (_isShieldActive)
         {
             _isShieldActive = false;
-            _shield.SetActive(false);
+            _shieldVisualizer.SetActive(false);
             return;
         }
 
         _lives--;
+
+        _uiManager.UpdateLives(_lives);
 
         if (_lives < 1)
         {
