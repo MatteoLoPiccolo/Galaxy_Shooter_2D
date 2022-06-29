@@ -12,6 +12,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _shieldVisualizer;
     [SerializeField]
+    private GameObject[] _engines;
+    [SerializeField]
     private float _fireRate = 0.15f;
     [SerializeField]
     private int _lives = 3;
@@ -23,6 +25,7 @@ public class Player : MonoBehaviour
     private bool _isShieldActive;
     private float _speedMultiplier = 2.0f;
     private int _score;
+    private int _randomEngineSelector;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +41,10 @@ public class Player : MonoBehaviour
         transform.position = Vector3.zero;
 
         _shieldVisualizer.SetActive(false);
+        _engines[0].SetActive(false);
+        _engines[1].SetActive(false);
+
+        _randomEngineSelector = Random.Range(0, _engines.Length);
     }
 
     // Update is called once per frame
@@ -124,6 +131,19 @@ public class Player : MonoBehaviour
         }
 
         _lives--;
+
+        switch (_lives)
+        {
+            case 2:
+                _engines[_randomEngineSelector].SetActive(true);
+                break;
+            case 1:
+                if (_engines[0].activeInHierarchy)
+                    _engines[1].SetActive(true);
+                else
+                    _engines[0].SetActive(true);
+                break;
+        }
 
         _uiManager.UpdateLives(_lives);
 

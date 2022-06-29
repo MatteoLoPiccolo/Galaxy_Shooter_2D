@@ -11,10 +11,8 @@ public class SpawnManager : MonoBehaviour
     private GameObject[] _powerups;
 
     private bool _stopSpawning = false;
-    
 
-    // Start is called before the first frame update
-    void Start()
+    public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerupRoutine());
@@ -22,6 +20,8 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemyRoutine()
     {
+        yield return new WaitForSeconds(3.0f);
+
         while (_stopSpawning == false)
         {
             var positionToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0);
@@ -33,6 +33,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerupRoutine()
     {
+        yield return new WaitForSeconds(3.0f);
         float _randomSpawnTime = Random.Range(2.5f, 7.5f);
 
         while (_stopSpawning == false)
