@@ -24,11 +24,11 @@ public class UIManager : MonoBehaviour
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
-            Debug.Log("Player is NULL!");
+            Debug.LogError("Player is NULL!");
 
         _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
         if (_gameManager == null)
-            Debug.Log("Game Manager is NULL!");
+            Debug.LogError("Game_Manager is NULL!");
 
         _scoreText.text = "Score: " + 0;
 

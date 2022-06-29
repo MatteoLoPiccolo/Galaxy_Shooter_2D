@@ -10,18 +10,25 @@ public class Enemy : MonoBehaviour
     private Player _player;
     private Animator _anim;
     private BoxCollider2D _boxCollider2D;
+    private AudioSource _audioSource;
 
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         if (_player == null)
-            Debug.Log("The Player is NULL!");
+            Debug.LogError("Player is NULL!");
 
         _anim = GetComponent<Animator>();
         if (_anim == null)
-            Debug.Log("The Animator is NULL!");
+            Debug.LogError("Animator is NULL!");
 
+        _boxCollider2D = GetComponent<BoxCollider2D>();
+        if (_boxCollider2D == null)
+            Debug.LogError("BoxCollider2D is NULL!");
 
+        _audioSource = GetComponent<AudioSource>();
+        if (_audioSource == null)
+            Debug.LogError("AudioSource is NULL!");
     }
 
     // Update is called once per frame
@@ -45,11 +52,12 @@ public class Enemy : MonoBehaviour
                 _player.Damage();
 
             _anim.SetTrigger("OnEnemyDeath");
+            _audioSource.Play();
             _speed = 0.0f;
 
             if (_boxCollider2D != null)
                 _boxCollider2D.enabled = false;
-            
+
             Destroy(gameObject, 2.8f);
         }
 
@@ -61,6 +69,7 @@ public class Enemy : MonoBehaviour
                 _player.AddScore(_points);
 
             _anim.SetTrigger("OnEnemyDeath");
+            _audioSource.Play();
             _speed = 0.0f;
 
             if (_boxCollider2D != null)

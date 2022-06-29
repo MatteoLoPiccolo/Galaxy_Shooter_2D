@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
 
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
+    private AudioSource _audioSource;
+    
     private float _canFire = -1f;
     private bool _isTripleShotActive;
     private bool _isShieldActive;
@@ -32,11 +34,15 @@ public class Player : MonoBehaviour
     {
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if (_spawnManager == null)
-            Debug.Log("SpawnManager is NULL!");
+            Debug.LogError("Spawn_Manager is NULL!");
 
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         if (_uiManager == null)
-            Debug.Log("UI_Manager is NULL!");
+            Debug.LogError("UI_Manager is NULL!");
+
+        _audioSource = GetComponent<AudioSource>();
+        if (_audioSource == null)
+            Debug.LogError("AudioSource is NULL!");
 
         transform.position = Vector3.zero;
 
@@ -60,6 +66,8 @@ public class Player : MonoBehaviour
             }
             else
                 FireLaser();
+
+            _audioSource.Play();
         }
     }
 
