@@ -6,11 +6,15 @@ public class Enemy : MonoBehaviour
     private float _speed = 4.0f;
     [SerializeField]
     private int _points;
+    [SerializeField]
+    private GameObject _laserPrefab;
 
     private Player _player;
     private Animator _anim;
     private BoxCollider2D _boxCollider2D;
     private AudioSource _audioSource;
+    private float _canFire = -1f;
+    private float _fireRate;
 
     private void Start()
     {
@@ -29,6 +33,8 @@ public class Enemy : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         if (_audioSource == null)
             Debug.LogError("AudioSource is NULL!");
+
+        _fireRate = Random.Range(2.5f, 6.0f);
     }
 
     // Update is called once per frame
@@ -42,11 +48,24 @@ public class Enemy : MonoBehaviour
             var yPos = 7.0f;
             transform.position = new Vector3(xRandomPos, yPos, transform.position.z);
         }
+
+        if (Time.time > _canFire)
+            ShootToPlayer();
+    }
+
+    private void ShootToPlayer()
+    {
+        _canFire = Time.time + _fireRate;
+        float yOffset = -1.5f;
+        var laser = Instantiate(_laserPrefab, new Vector3(transform.position.x, transform.position.y + yOffset, transform.position.z), Quaternion.identity);
+        laser.gameObject.AddComponent(typeof(EnemyLaser));
+        //laser.gameObject.AddComponent<EnemyLaser>();
+        laser.tag = TagManager._enemyLaser;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag(TagManager._player))
         {
             if (_player != null)
                 _player.Damage();
@@ -61,7 +80,7 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject, 2.8f);
         }
 
-        if (collision.gameObject.CompareTag("Laser"))
+        if (collision.gameObject.CompareTag(TagManager._playerLaser))
         {
             Destroy(collision.gameObject);
 

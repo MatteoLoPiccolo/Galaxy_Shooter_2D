@@ -75,7 +75,9 @@ public class Player : MonoBehaviour
     {
         _canFire = Time.time + _fireRate;
         float yOffset = 1.05f;
-        Instantiate(_laserPrefab, new Vector3(transform.position.x, transform.position.y + yOffset, transform.position.z), Quaternion.identity);
+        var laser = Instantiate(_laserPrefab, new Vector3(transform.position.x, transform.position.y + yOffset, transform.position.z), Quaternion.identity);
+        laser.gameObject.AddComponent(typeof(PlayerLaser));
+        //laser.gameObject.AddComponent<PlayerLaser>();
     }
 
     private void TripleShot()
@@ -172,5 +174,14 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(3.0f);
         _speed /= _speedMultiplier;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag(TagManager._enemyLaser))
+        {
+            Damage();
+            Destroy(collision.gameObject);
+        }
     }
 }

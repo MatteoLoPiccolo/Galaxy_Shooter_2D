@@ -31,7 +31,7 @@ public class Asteroid : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Laser"))
+        if (collision.gameObject.CompareTag(TagManager._playerLaser))
         {
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(collision.gameObject);

@@ -5,15 +5,9 @@ public class Laser : MonoBehaviour
     [SerializeField]
     private float _speed = 8.0f;
 
-    // Update is called once per frame
-    void Update()
+    public void CalculateMovement(Vector3 direction)
     {
-        CalculatMovement();
-    }
-
-    private void CalculatMovement()
-    {
-        transform.Translate(Vector3.up * _speed * Time.deltaTime);
+        transform.Translate(direction * _speed * Time.deltaTime);
 
         if (transform.position.y >= 8.0f)
         {
