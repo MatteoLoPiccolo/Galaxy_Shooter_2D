@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
-    private GameObject _tripleShotPrefab;
+    private Transform[] _tripleShotPosition;
     [SerializeField]
     private GameObject _shieldVisualizer;
     [SerializeField]
@@ -21,7 +21,8 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
     private AudioSource _audioSource;
-    
+    private SpriteRenderer _shieldRenderer;
+
     private float _canFire = -1f;
     private bool _isTripleShotActive;
     private bool _isShieldActive;
@@ -29,6 +30,7 @@ public class Player : MonoBehaviour
     private int _score;
     private int _randomEngineSelector;
     private float _speedAcceleration = 7.5f;
+    private int _shieldStrength = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +46,10 @@ public class Player : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         if (_audioSource == null)
             Debug.LogError("AudioSource is NULL!");
+
+        _shieldRenderer = _shieldVisualizer.GetComponent<SpriteRenderer>();
+        if (_shieldRenderer == null)
+            Debug.LogError("Shield SpriteRenderer is NULL!");
 
         transform.position = Vector3.zero;
 
@@ -84,13 +90,19 @@ public class Player : MonoBehaviour
         float yOffset = 1.05f;
         var laser = Instantiate(_laserPrefab, new Vector3(transform.position.x, transform.position.y + yOffset, transform.position.z), Quaternion.identity);
         laser.gameObject.AddComponent(typeof(PlayerLaser));
-        //laser.gameObject.AddComponent<PlayerLaser>();
+        laser.tag = TagManager._playerLaser;
     }
 
     private void TripleShot()
     {
         _canFire = Time.time + _fireRate;
-        Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+
+        foreach (var tripleShotTransform in _tripleShotPosition)
+        {
+            var tripleShot = Instantiate(_laserPrefab, tripleShotTransform.position, Quaternion.identity);
+            tripleShot.gameObject.AddComponent(typeof(PlayerLaser));
+            tripleShot.tag = TagManager._playerLaser;
+        }
     }
 
     public void TripleShotActive()
@@ -142,8 +154,23 @@ public class Player : MonoBehaviour
     {
         if (_isShieldActive)
         {
-            _isShieldActive = false;
-            _shieldVisualizer.SetActive(false);
+            switch (_shieldStrength)
+            {
+                case 3:
+                    _shieldStrength--;
+                    _shieldRenderer.color = Color.green;
+                    break;
+                case 2:
+                    _shieldStrength--;
+                    _shieldRenderer.color = Color.red;
+                    break;
+                case 1:
+                    _shieldStrength--;
+                    _isShieldActive = false;
+                    _shieldVisualizer.SetActive(false);
+                    break;
+            }
+
             return;
         }
 
