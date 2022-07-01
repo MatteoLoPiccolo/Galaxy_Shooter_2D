@@ -124,6 +124,7 @@ public class Player : MonoBehaviour
 
     public void ShieldActive()
     {
+        _shieldStrength = 3;
         _isShieldActive = true;
         _shieldVisualizer.SetActive(true);
     }
@@ -193,6 +194,7 @@ public class Player : MonoBehaviour
                     _shieldStrength--;
                     _isShieldActive = false;
                     _shieldVisualizer.SetActive(false);
+                    _shieldRenderer.color = Color.blue;
                     break;
             }
 
@@ -233,6 +235,11 @@ public class Player : MonoBehaviour
                     _engines[0].SetActive(true);
                 break;
         }
+    }
+
+    public bool IsShieldActive()
+    {
+        return _isShieldActive;
     }
 
     IEnumerator TripleShotPowerDownRoutine()
