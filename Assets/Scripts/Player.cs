@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     private float _speedAcceleration = 7.5f;
     private int _shieldStrength = 3;
     private int _laserAmmo = 15;
+    private int _randomAmmoMunition;
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +60,7 @@ public class Player : MonoBehaviour
         _engines[1].SetActive(false);
 
         _randomEngineSelector = Random.Range(0, _engines.Length);
+        _randomAmmoMunition = Random.Range(1, 8);
     }
 
     // Update is called once per frame
@@ -124,6 +126,16 @@ public class Player : MonoBehaviour
     {
         _isShieldActive = true;
         _shieldVisualizer.SetActive(true);
+    }
+
+    public void AddAmmo()
+    {
+        _laserAmmo += _randomAmmoMunition;
+
+        if (_laserAmmo >= 15)
+            _laserAmmo = 15;
+
+        _uiManager.UpdateAmmoCount(_laserAmmo);
     }
 
     private void CalculateMovement()
