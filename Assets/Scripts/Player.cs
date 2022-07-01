@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     private int _randomEngineSelector;
     private float _speedAcceleration = 7.5f;
     private int _shieldStrength = 3;
+    private int _laserAmmo = 15;
 
     // Start is called before the first frame update
     void Start()
@@ -71,7 +72,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.LeftShift))
             _speed = 5.0f;
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire && _laserAmmo >= 1)
         {
             if (_isTripleShotActive)
             {
@@ -87,6 +88,8 @@ public class Player : MonoBehaviour
     private void FireLaser()
     {
         _canFire = Time.time + _fireRate;
+        _laserAmmo--;
+        _uiManager.UpdateAmmoCount(_laserAmmo);
         float yOffset = 1.05f;
         var laser = Instantiate(_laserPrefab, new Vector3(transform.position.x, transform.position.y + yOffset, transform.position.z), Quaternion.identity);
         laser.gameObject.AddComponent(typeof(PlayerLaser));

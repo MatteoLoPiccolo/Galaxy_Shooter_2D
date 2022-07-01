@@ -14,6 +14,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private TMP_Text _quitText;
     [SerializeField]
+    private TMP_Text _ammoCountText;
+    [SerializeField]
     private Image _LivesImg;
     [SerializeField]
     private Sprite[] _liveSprites;
@@ -42,6 +44,11 @@ public class UIManager : MonoBehaviour
     public void UpdateScore(int playerScore)
     {
         _scoreText.text = "Score : " + playerScore.ToString();
+    }
+
+    public void UpdateAmmoCount(int ammoCount)
+    {
+        _ammoCountText.text = "Ammo Count : " + ammoCount.ToString();
     }
 
     public void UpdateLives(int currentLives)
