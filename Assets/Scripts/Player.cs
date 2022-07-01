@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     private float _speedMultiplier = 2.0f;
     private int _score;
     private int _randomEngineSelector;
+    private float _speedAcceleration = 7.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -57,6 +58,12 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+
+        if (Input.GetKey(KeyCode.LeftShift))
+            _speed = _speedAcceleration;
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+            _speed = 5.0f;
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
