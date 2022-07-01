@@ -138,6 +138,16 @@ public class Player : MonoBehaviour
         _uiManager.UpdateAmmoCount(_laserAmmo);
     }
 
+    public void AddLive()
+    {
+        _lives++;
+
+        if(_lives >= 3)
+            _lives = 3;
+
+        _uiManager.UpdateLives(_lives);
+    }
+
     private void CalculateMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -190,19 +200,7 @@ public class Player : MonoBehaviour
         }
 
         _lives--;
-
-        switch (_lives)
-        {
-            case 2:
-                _engines[_randomEngineSelector].SetActive(true);
-                break;
-            case 1:
-                if (_engines[0].activeInHierarchy)
-                    _engines[1].SetActive(true);
-                else
-                    _engines[0].SetActive(true);
-                break;
-        }
+        EngineDamageVisualization();
 
         _uiManager.UpdateLives(_lives);
 
@@ -210,6 +208,30 @@ public class Player : MonoBehaviour
         {
             _spawnManager.OnPlayerDead();
             Destroy(gameObject);
+        }
+    }
+
+    public void EngineDamageVisualization()
+    {
+        switch (_lives)
+        {
+            case 3:
+                _engines[0].SetActive(false);
+                _engines[1].SetActive(false);
+                break;
+            case 2:
+                _engines[_randomEngineSelector].SetActive(true);
+                if (_engines[0].activeInHierarchy)
+                    _engines[1].SetActive(false);
+                else
+                    _engines[0].SetActive(false);
+                break;
+            case 1:
+                if (_engines[0].activeInHierarchy)
+                    _engines[1].SetActive(true);
+                else
+                    _engines[0].SetActive(true);
+                break;
         }
     }
 

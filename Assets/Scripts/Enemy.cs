@@ -59,7 +59,6 @@ public class Enemy : MonoBehaviour
         float yOffset = -1.5f;
         var laser = Instantiate(_laserPrefab, new Vector3(transform.position.x, transform.position.y + yOffset, transform.position.z), Quaternion.identity);
         laser.gameObject.AddComponent(typeof(EnemyLaser));
-        //laser.gameObject.AddComponent<EnemyLaser>();
         laser.tag = TagManager._enemyLaser;
     }
 
