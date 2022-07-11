@@ -9,14 +9,18 @@ public class Powerup : MonoBehaviour
     [SerializeField]
     private AudioClip _powerupClip;
 
+    private int _healthAmount = 1;
     private Camera _cam;
     private float yOffset = -6.5f;
+    private int _randomAmmoMunition;
 
     private void Start()
     {
         _cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         if (_cam == null)
             Debug.LogError("Main Camera is NULL!");
+
+        _randomAmmoMunition = Random.Range(1, 8);
     }
 
     // Update is called once per frame
@@ -57,10 +61,15 @@ public class Powerup : MonoBehaviour
                         player.ShieldActive();
                         break;
                     case 3:
-                        player.AddAmmo();
+                        player.AddAmmo(_randomAmmoMunition);
                         break;
                     case 4:
-                        player.AddLive();
+                        if (player.Lives == 3)
+                        {
+                            Destroy(gameObject);
+                            return;
+                        }
+                        player.AddLive(_healthAmount);
                         player.EngineDamageVisualization();
                         break;
                 }

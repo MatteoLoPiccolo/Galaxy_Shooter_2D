@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -18,6 +19,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _lives = 3;
 
+    public int Lives { get { return _lives; } }
+
+    public static Action<int> OnUpdateScore;
+    public static Action<int> OnUpdateLives;
+    public static Action<int> OnUpdateAmmo;
+
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
     private AudioSource _audioSource;
@@ -32,7 +39,7 @@ public class Player : MonoBehaviour
     private float _speedAcceleration = 7.5f;
     private int _shieldStrength = 3;
     private int _laserAmmo = 15;
-    private int _randomAmmoMunition;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -59,8 +66,8 @@ public class Player : MonoBehaviour
         _engines[0].SetActive(false);
         _engines[1].SetActive(false);
 
-        _randomEngineSelector = Random.Range(0, _engines.Length);
-        _randomAmmoMunition = Random.Range(1, 8);
+        _randomEngineSelector = UnityEngine.Random.Range(0, _engines.Length);
+        
     }
 
     // Update is called once per frame
@@ -91,7 +98,8 @@ public class Player : MonoBehaviour
     {
         _canFire = Time.time + _fireRate;
         _laserAmmo--;
-        _uiManager.UpdateAmmoCount(_laserAmmo);
+        if (OnUpdateAmmo != null)
+            OnUpdateAmmo(_laserAmmo);
         float yOffset = 1.05f;
         var laser = Instantiate(_laserPrefab, new Vector3(transform.position.x, transform.position.y + yOffset, transform.position.z), Quaternion.identity);
         laser.gameObject.AddComponent(typeof(PlayerLaser));
@@ -125,28 +133,39 @@ public class Player : MonoBehaviour
     public void ShieldActive()
     {
         _shieldStrength = 3;
+        _shieldRenderer.color = Color.blue;
         _isShieldActive = true;
         _shieldVisualizer.SetActive(true);
     }
 
-    public void AddAmmo()
+    public void AddAmmo(int randomAmmoAmount)
     {
-        _laserAmmo += _randomAmmoMunition;
+        _laserAmmo += randomAmmoAmount;
 
         if (_laserAmmo >= 15)
             _laserAmmo = 15;
 
-        _uiManager.UpdateAmmoCount(_laserAmmo);
+        if (OnUpdateAmmo != null)
+            OnUpdateAmmo(_laserAmmo);
     }
 
-    public void AddLive()
+    public void AddLive(int lives)
     {
-        _lives++;
+        _lives += lives;
 
-        if(_lives >= 3)
+        if(_lives == 3)
             _lives = 3;
 
-        _uiManager.UpdateLives(_lives);
+        if (OnUpdateLives != null)
+            OnUpdateLives(_lives);
+    }
+
+    public void AddScore(int points)
+    {
+        _score += points;
+
+        if (OnUpdateScore != null)
+            OnUpdateScore(_score);
     }
 
     private void CalculateMovement()
@@ -170,12 +189,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void AddScore(int points)
-    {
-        _score += points;
-        _uiManager.UpdateScore(_score);
-    }
-
     public void Damage()
     {
         if (_isShieldActive)
@@ -194,7 +207,6 @@ public class Player : MonoBehaviour
                     _shieldStrength--;
                     _isShieldActive = false;
                     _shieldVisualizer.SetActive(false);
-                    _shieldRenderer.color = Color.blue;
                     break;
             }
 
@@ -204,7 +216,8 @@ public class Player : MonoBehaviour
         _lives--;
         EngineDamageVisualization();
 
-        _uiManager.UpdateLives(_lives);
+        if (OnUpdateLives != null)
+            OnUpdateLives(_lives);
 
         if (_lives < 1)
         {

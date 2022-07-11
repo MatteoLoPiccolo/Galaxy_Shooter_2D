@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -23,6 +24,8 @@ public class UIManager : MonoBehaviour
     private Player _player;
     private GameManager _gameManager;
 
+    public static Action<int> OnUpdateScore;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +42,20 @@ public class UIManager : MonoBehaviour
         _gameOverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
         _quitText.gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        Player.OnUpdateScore += UpdateScore;
+        Player.OnUpdateLives += UpdateLives;
+        Player.OnUpdateAmmo += UpdateAmmoCount;
+    }
+
+    private void OnDisable()
+    {
+        Player.OnUpdateScore -= UpdateScore;
+        Player.OnUpdateLives -= UpdateLives;
+        Player.OnUpdateAmmo -= UpdateAmmoCount;
     }
 
     public void UpdateScore(int playerScore)
